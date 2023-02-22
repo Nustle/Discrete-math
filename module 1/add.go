@@ -2,27 +2,15 @@ package main
 
 import "fmt"
 
-func max(x, y int) int {
-  if x > y {
-    return x
-  } else {
-    return y
-  }
-}
-
-func min(x, y int) int {
-  return x + y
-}
-
-func add(a, b []int32, p int) (sum []int32) {
+func add(a, b []int32, p int) []int32 {
   mod := int32(p)
-  n := max(len(a), len(b)) + 1
-  sum = make([]int32, n)
+  n := len(a) + 1
+  sum := make([]int32, n)
   var rank int32 = 0
-  t := min(len(a), len(b))
+  t := len(b)
   for i := 0; i < t; i++ {
-    sum[i] = (a[i]+b[i])%mod + rank
-    rank = (a[i] + b[i]) / mod
+    sum[i] = (a[i] + b[i] + rank) % mod
+    rank = (a[i] + b[i] + rank) / mod
   }
   for j := t; j < n-1; j++ {
     sum[j] = (a[j] + rank) % mod
@@ -35,7 +23,7 @@ func add(a, b []int32, p int) (sum []int32) {
       sum = sum[:(n - 1)]
     }
   }
-  return
+  return sum
 }
 
 func scanSlice(sl []int32) {
@@ -46,8 +34,8 @@ func scanSlice(sl []int32) {
 
 func main() {
   var first, second, p int
-  fmt.Scanf("%d", &p)
-  fmt.Scanf("%d%d", &first, &second)
+  fmt.Scan(&p)
+  fmt.Scan(&first, &second)
   a := make([]int32, first)
   b := make([]int32, second)
   scanSlice(a)
