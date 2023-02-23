@@ -31,14 +31,18 @@ func nod(x, y int) int {
   return x
 }
 
+func divMake(elem *frac) {
+  div := nod(elem.num, elem.denom)
+  elem.num /= div
+  elem.denom /= div
+}
+
 func appendSolution(ans []frac, i int, matrix [][]frac) []frac {
   var x frac
   x.num = matrix[i-1][i-1].denom * matrix[i-1][len(matrix)].num
   x.denom = matrix[i-1][i-1].num * matrix[i-1][len(matrix)].denom
-  div := nod(x.num, x.denom)
-  x.num /= div
-  x.denom /= div
-  if (x.num < 0 && x.denom < 0) || (x.num >= 0 && x.denom < 0) {
+  divMake(&x)
+  if (x.num < 0 && x.denom < 0)  (x.num >= 0 && x.denom < 0) {
     x.num, x.denom = -x.num, -x.denom
   }
   ans = append(ans, x)
@@ -49,9 +53,12 @@ func forwardGaussRec(step int, matrix [][]frac) {
   for i := step + 1; i < len(matrix); i++ {
     k := matrix[i][step]
     for j := step; j < len(matrix[i]); j++ {
-      matrix[i][j].num = matrix[i][j].num*matrix[step][j].denom*matrix[step][step].num*k.denom - 
-                         matrix[i][j].denom*matrix[step][j].num*matrix[step][step].denom*k.num
+      matrix[i][j].num = matrix[i][j].num*matrix[step][j].denom*matrix[step][step].num*k.denom -
+        matrix[i][j].denom*matrix[step][j].num*matrix[step][step].denom*k.num
       matrix[i][j].denom = matrix[i][j].denom * matrix[step][j].denom * matrix[step][step].num * k.denom
+      if matrix[i][j].num != 0  matrix[i][j].denom != 0 {
+        divMake(&matrix[i][j])
+      }
     }
   }
 }
@@ -59,13 +66,11 @@ func forwardGaussRec(step int, matrix [][]frac) {
 func backwardGaussRec(step int, matrix [][]frac) {
   n := len(matrix)
   for i := step - 1; i >= 0; i-- {
-    matrix[i][n].num = matrix[step][n].denom*matrix[step][step].num*matrix[i][step].denom*matrix[i][n].num - 
-                       matrix[step][n].num*matrix[step][step].denom*matrix[i][step].num*matrix[i][n].denom
+    matrix[i][n].num = matrix[step][n].denom*matrix[step][step].num*matrix[i][step].denom*matrix[i][n].num -
+      matrix[step][n].num*matrix[step][step].denom*matrix[i][step].num*matrix[i][n].denom
     matrix[i][n].denom = matrix[step][n].denom * matrix[step][step].num * matrix[i][step].denom * matrix[i][n].denom
     matrix[i][step].num, matrix[i][step].denom = 0, 1
-    div := nod(matrix[i][n].num, matrix[i][n].denom)
-    matrix[i][n].num /= div
-    matrix[i][n].denom /= div
+    divMake(&matrix[i][n])
   }
 }
 
@@ -86,6 +91,7 @@ func backwardGauss(matrix [][]frac) (ans []frac) {
 
 func isJoint(matrix [][]frac) (ok bool) {
   ok = true
+Joint:
   for i := range matrix {
     haveNulls := true
     for j := 0; j < len(matrix[i])-1; j++ {
@@ -97,6 +103,7 @@ func isJoint(matrix [][]frac) (ok bool) {
     if haveNulls {
       if matrix[i][len(matrix[i])-1].num != 0 {
         ok = false
+        break Joint
       }
     }
   }
