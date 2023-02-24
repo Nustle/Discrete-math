@@ -37,6 +37,27 @@ func divMake(elem *frac) {
   elem.denom /= div
 }
 
+func swapZero(matrix [][]frac, step int) {
+  needSwap := true
+  for i := step + 1; i < len(matrix); i++ {
+    if matrix[i][step].num != 0 {
+      matrix[step], matrix[i] = matrix[i], matrix[step]
+      needSwap = false
+      break
+    }
+  }
+  if needSwap {
+    for i := step + 1; i < len(matrix); i++ {
+      if matrix[step][i].num != 0 {
+        for j := step; j < len(matrix); j++ {
+          matrix[j][step], matrix[j][i] = matrix[j][i], matrix[j][step]
+        }
+        break
+      }
+    }
+  }
+}
+
 func appendSolution(ans []frac, i int, matrix [][]frac) []frac {
   var x frac
   x.num = matrix[i-1][i-1].denom * matrix[i-1][len(matrix)].num
@@ -76,6 +97,9 @@ func backwardGaussRec(step int, matrix [][]frac) {
 
 func forwardGauss(matrix [][]frac) {
   for i := range matrix {
+    if matrix[i][i].num == 0 {
+      swapZero(matrix, i)
+    }
     forwardGaussRec(i, matrix)
   }
 }
