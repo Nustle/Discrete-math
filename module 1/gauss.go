@@ -42,7 +42,7 @@ func appendSolution(ans []frac, i int, matrix [][]frac) []frac {
   x.num = matrix[i-1][i-1].denom * matrix[i-1][len(matrix)].num
   x.denom = matrix[i-1][i-1].num * matrix[i-1][len(matrix)].denom
   divMake(&x)
-  if (x.num < 0 && x.denom < 0)  (x.num >= 0 && x.denom < 0) {
+  if (x.num < 0 && x.denom < 0) || (x.num >= 0 && x.denom < 0) {
     x.num, x.denom = -x.num, -x.denom
   }
   ans = append(ans, x)
@@ -56,7 +56,7 @@ func forwardGaussRec(step int, matrix [][]frac) {
       matrix[i][j].num = matrix[i][j].num*matrix[step][j].denom*matrix[step][step].num*k.denom -
         matrix[i][j].denom*matrix[step][j].num*matrix[step][step].denom*k.num
       matrix[i][j].denom = matrix[i][j].denom * matrix[step][j].denom * matrix[step][step].num * k.denom
-      if matrix[i][j].num != 0  matrix[i][j].denom != 0 {
+      if matrix[i][j].num != 0 || matrix[i][j].denom != 0 {
         divMake(&matrix[i][j])
       }
     }
@@ -94,7 +94,7 @@ func isJoint(matrix [][]frac) (ok bool) {
 Joint:
   for i := range matrix {
     haveNulls := true
-    for j := 0; j < len(matrix[i])-1; j++ {
+    for j := 0; j < len(matrix[i]) - 1; j++ {
       if matrix[i][j].num != 0 {
         haveNulls = false
         break
