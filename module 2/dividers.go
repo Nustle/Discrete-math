@@ -13,7 +13,7 @@ func max(x, y int) (ans int) {
 func incidental(top int, dividers []int, incidentMatrix map[int][]int) {
   for _, x := range dividers {
     isIncident := true
-    if x == top || (x < top && top % x != 0  x > top && x % top != 0) {
+    if x == top || (x < top && top % x != 0 || x > top && x % top != 0) {
       isIncident = false
     } else {
       first := max(x, top)
