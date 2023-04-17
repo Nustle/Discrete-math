@@ -69,7 +69,7 @@ func main() {
     }
     if count > maxCount || (count == maxCount && second-first > countEdges) || (count == maxCount && second-first == countEdges && currentMin < min) {
       maxCount = count
-      countEdges = len(edges)
+      countEdges = second-first
       min = currentMin
       resultColor = color
     }
