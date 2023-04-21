@@ -24,7 +24,7 @@ func incidental(top int, dividers []int) {
       }
     }
     if isIncident {
-      fmt.Printf("\t%d--%d\n", top, x)
+      fmt.Printf("\t%d--%d\n", x, top)
     }
   }
 }
@@ -43,7 +43,7 @@ func getDividers(dividers []int, n int) []int {
     dividers = append(dividers, n)
   }
   sort.Slice(dividers, func(i, j int) bool {
-    return dividers[i] < dividers[j]
+    return dividers[i] > dividers[j]
   })
 
   return dividers
