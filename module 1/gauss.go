@@ -6,7 +6,7 @@ type frac struct {
 	num, denom int
 }
 
-func max(x, y int) (ans int) {
+func max(x, y int) (ans int) { 
 	ans = x
 	if y > x {
 		ans = y
