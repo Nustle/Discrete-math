@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void bfs(int n, int s, vector< vector<int> > g, vector<int>& d) {
+void bfs(int n, int s, vector< vector<int> > g, vector<vector<int>>& d, int j) {
     queue<int> q;
     q.push (s);
     vector<bool> used (n);
@@ -17,7 +17,7 @@ void bfs(int n, int s, vector< vector<int> > g, vector<int>& d) {
             if (!used[to]) {
                 used[to] = true;
                 q.push (to);
-                d[to] = d[v] + 1;
+                d[j][to] = d[j][v] + 1;
             }
         }
     }
@@ -27,7 +27,7 @@ int main() {
     int n, m, k;
     cin >> n >> m;
     vector<vector<int>> g(n);
-    for (int i=0; i<m; ++i) {
+    for (int i = 0; i < m; ++i) {
         int u, v;
         cin >> u >> v;
         g[u].push_back(v);
@@ -35,23 +35,20 @@ int main() {
     }
     cin >> k;
     vector<int> pivot;
-    vector<bool> used (n);
-    for (int i=0; i<k; ++i) {
+    for (int i = 0; i < k; ++i) {
         int p;
         cin >> p;
         pivot.push_back(p);
     }
+    vector<vector<int>> d(k, vector<int>(n));
     int count = 0;
+    for (int i=0; i<k; ++i) {
+        bfs(n, pivot[i], g, d, i);
+    }
     for (int i=0; i<n; ++i) {
-        int temp = -1;
         bool is_pivot = true;
-        vector<int> d(n);
-        bfs(n, i, g, d);
-        for (auto p : pivot) {
-            if (temp == -1) {
-                temp = d[p];
-            }
-            if (d[p] == 0 || i==p || temp != d[p]) {
+        for (int j=1; j<k; ++j) {
+            if (d[j][i] != d[j-1][i] || d[j][i] == 0) {
                 is_pivot = false;
                 break;
             }
