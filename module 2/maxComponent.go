@@ -13,17 +13,16 @@ type pair struct {
   x, y int
 }
 
-func dfs(graph [][]root, visited map[int]bool, now int, count *int, min *int, color int, edges map[pair]int) {
+func dfs(graph [][]root, visited map[int]bool, now int, min *int, color int, edges map[pair]int) {
   visited[now] = true
   for i, v := range graph[now] {
     var p pair
     p.x, p.y = int(math.Min(float64(now), float64(v.v))), int(math.Max(float64(now), float64(v.v)))
     edges[p] = 1
     if v.color == 0 {
-      *count++
       graph[now][i].color = color
       *min = int(math.Min(float64(*min), float64(v.v)))
-      dfs(graph, visited, v.v, count, min, color, edges)
+      dfs(graph, visited, v.v, min, color, edges)
     }
   }
 }
@@ -59,13 +58,17 @@ func main() {
   min := n
   edges := make(map[pair]int)
   first, second := 0, len(edges)
+  c1, c2 := 0, 0
   for i := range graph {
     count := 0
     currentMin := n
     if !visited[i] {
-      dfs(graph, visited, i, &count, &currentMin, color, edges)
+      dfs(graph, visited, i, &currentMin, color, edges)
       first = second
       second = len(edges)
+      c1 = c2
+      c2 = len(visited)
+      count = c2 - c1
     }
     if count > maxCount || (count == maxCount && second-first > countEdges) || (count == maxCount && second-first == countEdges && currentMin < min) {
       maxCount = count
