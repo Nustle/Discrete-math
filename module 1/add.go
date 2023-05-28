@@ -3,6 +3,9 @@ package main
 import "fmt"
 
 func add(a, b []int32, p int) []int32 {
+  if len(b) > len(a) {
+    a, b = b, a
+  }
   mod := int32(p)
   n := len(a) + 1
   sum := make([]int32, n)
@@ -40,8 +43,5 @@ func main() {
   b := make([]int32, second)
   scanSlice(a)
   scanSlice(b)
-  if len(b) > len(a) {
-    a, b = b, a
-  }
   fmt.Println(add(a, b, p))
 }
