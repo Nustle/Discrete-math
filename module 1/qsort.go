@@ -15,9 +15,7 @@ func less(i, j int) (isLess bool) {
 }
 
 func swap(i, j int) {
-  temp := sl[i]
-  sl[i] = sl[j]
-  sl[j] = temp
+  sl[i], sl[j] = sl[j], sl[i]
 }
 
 func partition(low, high int,
@@ -37,15 +35,10 @@ func partition(low, high int,
 func qsortRec(low, high int,
   less func(i, j int) bool,
   swap func(i, j int)) {
-  if low <= high {
+  if low < high {
     q := partition(low, high, less, swap)
-    if (high+low)>>1 < q {
-      qsortRec(low, q-1, less, swap)
-      low = q + 1
-    } else {
-      qsortRec(q+1, high, less, swap)
-      high = q - 1
-    }
+    qsortRec(low, q-1, less, swap)
+    qsortRec(q+1, high, less, swap)
   }
 }
 
